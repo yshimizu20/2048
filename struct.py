@@ -130,6 +130,77 @@ class Board(object):
                 if self.board[j][i]:
                     print '%4d' % self.board[j][i]
                 else:
-                    print '     .'
+                    print ''
 
-            
+    # add AI manager later?
+
+class GameManager(object):
+    def __init__(self):
+        self.player = ''
+        self.board = Board()
+        self.board.randomTile()
+        self.board.randomTile()
+        self.board.show()
+        # self.ai
+
+    def setPlayer(self, name):
+        self.player = name
+
+    def getGameState(self):
+        d = {}
+
+        cells = {}
+        d['grid'] = {'cells': cells}
+        for i in range(N):
+            row = []
+            for j in range(N):
+                if self.board.board[i][j]:
+                    cell = {'value': self.board[i][j]}
+                else:
+                    cell = None
+                row.append(cell)
+            cells.append(row)
+
+        d['won'] = False
+        d['over'] = self.board.over()
+
+        return d
+
+    def getGrid(self):
+        gs = self.getGameState()
+        if gs is None:
+            return None
+        raw_grid = gs['grid']['cells']
+        grid = list()
+        for i in xrange(4):
+            col = [x['value'] if x else None for x in raw_grid[i]]
+            grid.append(col)
+        return grid
+
+    def getScore(self):
+        return self.board.score
+    
+    def isOver(self):
+        return self.board.over
+
+    def isWin(self):
+        return False
+
+    def pressKey(self, kc):
+        if kc == MOVES['left']:
+          self.board.move(KEY_LEFT)
+        elif kc == MOVES['right']:
+            self.board.move(KEY_RIGHT)
+        elif kc == MOVES['up']:
+            self.board.move(KEY_UP)
+        elif kc == MOVES['down']:
+            self.board.move(KEY_DOWN)
+        else:
+            raise ValueError
+
+        self.board.show()
+
+    def keepGoing(self):
+        pass
+
+    
